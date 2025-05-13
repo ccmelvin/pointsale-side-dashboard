@@ -4,6 +4,12 @@ A responsive Next.js dashboard application featuring a collapsible sidebar, dark
 
 The dashboard combines modern web technologies with practical business features, offering a responsive layout that works seamlessly across desktop and mobile devices. It features an expandable/collapsible sidebar navigation system, theme customization options, and a clean, professional design that prioritizes user experience.
 
+## Pointsale Dashboard
+
+## Features Preview
+
+![Dashboard Interface](/src/docs/dashboard-overview.gif)
+
 ## Repository Structure
 
 ``` javascript
