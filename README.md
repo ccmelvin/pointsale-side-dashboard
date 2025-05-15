@@ -14,22 +14,22 @@ The dashboard combines modern web technologies with practical business features,
 
 ``` javascript
 .
-├── src/                          # Source code directory
-│   ├── app/                      # Next.js app directory
-│   │   ├── hooks/               # Custom React hooks
-│   │   │   └── use-theme.tsx    # Theme management hook
-│   │   ├── globals.css          # Global styles
-│   │   ├── layout.tsx           # Root layout component
-│   │   └── page.tsx             # Main entry point
-│   └── components/              # React components
-│       ├── dashboard.tsx        # Main dashboard layout
-│       ├── sidebar.tsx          # Collapsed sidebar view
-│       ├── sidebar-content.tsx  # Expanded sidebar view
-│       └── theme-provider.tsx   # Theme context provider
-├── tailwind.config.js           # Tailwind CSS configuration
-├── tsconfig.json               # TypeScript configuration
-├── next.config.ts              # Next.js configuration
-└── package.json                # Project dependencies and scripts
+├── src/                          
+│   ├── app/                    
+│   │   ├── hooks/               
+│   │   │   └── use-theme.tsx
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   └── components/
+│       ├── dashboard.tsx
+│       ├── sidebar.tsx
+│       ├── sidebar-content.tsx
+│       └── theme-provider.tsx
+├── tailwind.config.js
+├── tsconfig.json
+├── next.config.ts
+└── package.json
 ```
 
 ## Usage Instructions
