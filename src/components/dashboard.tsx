@@ -11,6 +11,8 @@ import { SettingsContent } from "@/components/settings-content"
 import { ProfileContent } from "@/components/profile-content"
 import { NotificationsContent } from "@/components/notifications-content"
 import { InboxContent } from "@/components/inbox-content"
+import { ReportsContent } from "@/components/reports-content"
+import { ManufacturersContent } from "@/components/manufacturers-content"
 
 export function Dashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -81,6 +83,10 @@ export function Dashboard() {
         return <InboxContent />
       case "/notifications":
         return <NotificationsContent />
+      case "/reports":
+        return <ReportsContent />
+      case "/manufacturers":
+        return <ManufacturersContent />
       default:
         // For other pages, show a generic content
         return (
