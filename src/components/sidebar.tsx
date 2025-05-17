@@ -15,8 +15,11 @@ import {
   HelpCircle,
   Sparkles,
   ChevronRight,
+  LogOut,
 } from "lucide-react"
 import { useTheme } from '@/app/hooks/use-theme';
+import { signOut } from '@/lib/auth';
+import { useRouter } from 'next/navigation';
 
 interface SidebarProps {
   onToggle: () => void;
@@ -25,6 +28,16 @@ interface SidebarProps {
 
 export function Sidebar({ onToggle, onNavigate }: SidebarProps) {
   const { toggleTheme } = useTheme();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push('/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   return (
     <div className="flex h-full w-[68px] flex-col bg-white border-r border-gray-200 dark:bg-gray-900 dark:border-gray-800">
@@ -139,6 +152,13 @@ export function Sidebar({ onToggle, onNavigate }: SidebarProps) {
           onClick={() => onNavigate('/help')}
         >
           <HelpCircle className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+        </button>
+        <button 
+          className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+          onClick={handleLogout}
+          title="Logout"
+        >
+          <LogOut className="h-5 w-5 text-red-500 dark:text-red-400" />
         </button>
         <div 
           className="h-12 flex items-center justify-center cursor-pointer"
