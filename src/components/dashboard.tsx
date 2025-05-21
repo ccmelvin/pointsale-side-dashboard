@@ -91,7 +91,7 @@ export function Dashboard() {
         // For other pages, show a generic content
         return (
           <div className="p-6">
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">{currentPage}</h1>
+            <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-400">{currentPage}</h1>
             <p className="mt-2 text-gray-600 dark:text-gray-400">
               This is the {currentPage.toLowerCase()} page. Content for this page is coming soon.
             </p>

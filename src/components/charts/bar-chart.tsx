@@ -1,7 +1,15 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
+import { 
+  BarChart as RechartsBarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer 
+} from 'recharts';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 
 interface BarChartProps {
@@ -21,77 +29,11 @@ export function BarChart({
   barColor = 'rgb(59, 130, 246)',
   hoverColor = 'rgb(37, 99, 235)'
 }: BarChartProps) {
-  const chartRef = useRef<HTMLCanvasElement>(null);
-  const chartInstance = useRef<Chart | null>(null);
-
-  useEffect(() => {
-    if (!chartRef.current) return;
-    
-    // Destroy previous chart instance if it exists
-    if (chartInstance.current) {
-      chartInstance.current.destroy();
-    }
-    
-    // Create new chart
-    const ctx = chartRef.current.getContext('2d');
-    if (ctx) {
-      chartInstance.current = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels,
-          datasets: [
-            {
-              label: title,
-              data,
-              backgroundColor: barColor,
-              hoverBackgroundColor: hoverColor,
-              borderRadius: 4,
-              borderWidth: 0,
-              maxBarThickness: 40,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              mode: 'index',
-              intersect: false,
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              titleColor: '#fff',
-              bodyColor: '#fff',
-              borderColor: 'rgba(255, 255, 255, 0.2)',
-              borderWidth: 1,
-            },
-          },
-          scales: {
-            x: {
-              grid: {
-                display: false,
-              },
-            },
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(0, 0, 0, 0.05)',
-              },
-            },
-          },
-        },
-      });
-    }
-    
-    // Cleanup on unmount
-    return () => {
-      if (chartInstance.current) {
-        chartInstance.current.destroy();
-      }
-    };
-  }, [data, labels, title, barColor, hoverColor]);
+  // Format data for recharts
+  const chartData = labels.map((label, index) => ({
+    name: label,
+    value: data[index]
+  }));
 
   return (
     <Card className={className}>
@@ -100,7 +42,24 @@ export function BarChart({
       </CardHeader>
       <CardContent>
         <div className="h-[300px]">
-          <canvas ref={chartRef}></canvas>
+          <ResponsiveContainer width="100%" height="100%">
+            <RechartsBarChart
+              data={chartData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar 
+                dataKey="value" 
+                name={title} 
+                fill={barColor} 
+                activeBar={{ fill: hoverColor }}
+              />
+            </RechartsBarChart>
+          </ResponsiveContainer>
         </div>
       </CardContent>
     </Card>

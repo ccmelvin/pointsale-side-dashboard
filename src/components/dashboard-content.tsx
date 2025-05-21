@@ -1,6 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer 
+} from 'recharts';
 
 export function DashboardContent() {
   // Sample data for the dashboard
@@ -29,6 +39,47 @@ export function DashboardContent() {
     { name: 'Laptop Stand', sales: 76, revenue: 3800 },
     { name: 'USB-C Hub', sales: 65, revenue: 3250 },
   ]);
+
+  // Chart data
+  const [timeRange, setTimeRange] = useState('monthly');
+  
+  const dailyData = [
+    { name: 'Mon', value: 1200 },
+    { name: 'Tue', value: 1400 },
+    { name: 'Wed', value: 1100 },
+    { name: 'Thu', value: 1700 },
+    { name: 'Fri', value: 1600 },
+    { name: 'Sat', value: 1000 },
+    { name: 'Sun', value: 800 },
+  ];
+  
+  const weeklyData = [
+    { name: 'Week 1', value: 4200 },
+    { name: 'Week 2', value: 5100 },
+    { name: 'Week 3', value: 6300 },
+    { name: 'Week 4', value: 5800 },
+  ];
+  
+  const monthlyData = [
+    { name: 'Jan', value: 12500 },
+    { name: 'Feb', value: 15000 },
+    { name: 'Mar', value: 18200 },
+    { name: 'Apr', value: 17800 },
+    { name: 'May', value: 19500 },
+    { name: 'Jun', value: 22000 },
+    { name: 'Jul', value: 24500 },
+    { name: 'Aug', value: 23800 },
+    { name: 'Sep', value: 26000 },
+    { name: 'Oct', value: 27500 },
+    { name: 'Nov', value: 29000 },
+    { name: 'Dec', value: 31200 },
+  ];
+  
+  const chartData = timeRange === 'daily' 
+    ? dailyData 
+    : timeRange === 'weekly' 
+      ? weeklyData 
+      : monthlyData;
 
   // Status color mapping
   const getStatusColor = (status: string) => {
@@ -99,14 +150,52 @@ export function DashboardContent() {
         </div>
       </div>
 
-      {/* Sales Chart Placeholder */}
+      {/* Sales Chart */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Sales Overview</h2>
-        <div className="h-64 bg-gray-50 dark:bg-gray-700 rounded-md flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-gray-400 dark:text-gray-500 mb-2">Sales Chart</div>
-            <div className="text-sm text-gray-500 dark:text-gray-400">This is where a chart would be displayed</div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Sales Overview</h2>
+          <div className="flex space-x-2">
+            <button 
+              className={`px-3 py-1 text-xs rounded-md ${timeRange === 'daily' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+              onClick={() => setTimeRange('daily')}
+            >
+              Daily
+            </button>
+            <button 
+              className={`px-3 py-1 text-xs rounded-md ${timeRange === 'weekly' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+              onClick={() => setTimeRange('weekly')}
+            >
+              Weekly
+            </button>
+            <button 
+              className={`px-3 py-1 text-xs rounded-md ${timeRange === 'monthly' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+              onClick={() => setTimeRange('monthly')}
+            >
+              Monthly
+            </button>
           </div>
+        </div>
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={chartData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip formatter={(value) => [`$${value.toLocaleString()}`, 'Revenue']} />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="value"
+                name="Revenue"
+                stroke="#3b82f6"
+                activeDot={{ r: 8 }}
+                strokeWidth={2}
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
@@ -157,14 +246,12 @@ export function DashboardContent() {
           <div className="p-6">
             <ul className="divide-y divide-gray-200 dark:divide-gray-700">
               {topProducts.map((product, index) => (
-                <li key={index} className="py-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{product.name}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{product.sales} units sold</p>
-                    </div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">${product.revenue.toLocaleString()}</p>
+                <li key={index} className="py-3 flex justify-between items-center">
+                  <div>
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{product.name}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{product.sales} units sold</p>
                   </div>
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">${product.revenue.toLocaleString()}</span>
                 </li>
               ))}
             </ul>

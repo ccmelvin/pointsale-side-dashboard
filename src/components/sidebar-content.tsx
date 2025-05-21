@@ -25,9 +25,10 @@ import { useRouter } from 'next/navigation';
 interface SidebarContentProps {
   onToggle: () => void;
   onNavigate: (path: string) => void;
+  currentPath?: string;
 }
 
-export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
+export function SidebarContent({ onToggle, onNavigate, currentPath = '/dashboard' }: SidebarContentProps) {
   const { toggleTheme, isDark } = useTheme();
   const router = useRouter();
 
@@ -60,7 +61,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
       <div className="flex-1 overflow-auto">
         <div className="p-2">
           <div 
-            className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+            className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/search' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
             onClick={() => onNavigate('/search')}
           >
             <Search className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -70,7 +71,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
 
         <div className="p-2">
           <div 
-            className="flex items-center justify-between rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+            className={`flex items-center justify-between rounded-md px-3 py-2 cursor-pointer ${currentPath === '/inbox' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
             onClick={() => onNavigate('/inbox')}
           >
             <div className="flex items-center gap-2">
@@ -81,7 +82,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
           </div>
 
           <div 
-            className="flex items-center justify-between rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+            className={`flex items-center justify-between rounded-md px-3 py-2 cursor-pointer ${currentPath === '/notifications' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
             onClick={() => onNavigate('/notifications')}
           >
             <div className="flex items-center gap-2">
@@ -99,7 +100,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
 
           <div className="mt-1 space-y-1">
             <div 
-              className="flex items-center gap-2 rounded-md bg-gray-100 dark:bg-gray-800 px-3 py-2 cursor-pointer"
+              className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/dashboard' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
               onClick={() => onNavigate('/dashboard')}
             >
               <LayoutGrid className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -107,7 +108,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
             </div>
 
             <div 
-              className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+              className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/dashboard/analytics' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
               onClick={() => onNavigate('/dashboard/analytics')}
             >
               <BarChart2 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -115,7 +116,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
             </div>
 
             <div 
-              className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+              className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/reports' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
               onClick={() => onNavigate('/reports')}
             >
               <FileBarChart className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -123,7 +124,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
             </div>
 
             <div 
-              className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+              className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/orders' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
               onClick={() => onNavigate('/orders')}
             >
               <FileText className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -131,7 +132,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
             </div>
 
             <div 
-              className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+              className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/invoices' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
               onClick={() => onNavigate('/invoices')}
             >
               <FileSpreadsheet className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -139,7 +140,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
             </div>
 
             <div 
-              className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+              className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/manufacturers' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
               onClick={() => onNavigate('/manufacturers')}
             >
               <Factory className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -147,7 +148,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
             </div>
 
             <div 
-              className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+              className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/trash' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
               onClick={() => onNavigate('/trash')}
             >
               <Trash2 className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -178,7 +179,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
 
         <div className="p-2">
           <div 
-            className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+            className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/dashboard/settings' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
             onClick={() => onNavigate('/dashboard/settings')}
           >
             <Settings className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -199,7 +200,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
           </div>
 
           <div 
-            className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+            className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/themes' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
             onClick={() => onNavigate('/themes')}
           >
             <Palette className="h-5 w-5 text-gray-500 dark:text-gray-400" />
@@ -207,7 +208,7 @@ export function SidebarContent({ onToggle, onNavigate }: SidebarContentProps) {
           </div>
 
           <div 
-            className="flex items-center gap-2 rounded-md px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+            className={`flex items-center gap-2 rounded-md px-3 py-2 cursor-pointer ${currentPath === '/help' ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
             onClick={() => onNavigate('/help')}
           >
             <HelpCircle className="h-5 w-5 text-gray-500 dark:text-gray-400" />

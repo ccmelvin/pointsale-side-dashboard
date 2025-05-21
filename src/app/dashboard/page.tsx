@@ -1,11 +1,55 @@
 'use client';
 
-import { SalesOverviewChart } from '@/components/sales-overview-chart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { salesSummary, topSellingProducts, recentOrders } from '@/lib/mock-data';
-import { BarChart } from '@/components/charts/bar-chart';
+import { 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer 
+} from 'recharts';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+
+// Hardcoded data for the chart
+const monthlySalesData = {
+  data: [12500, 15000, 18200, 17800, 19500, 22000, 24500, 23800, 26000, 27500, 29000, 31200],
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  title: 'Monthly Sales',
+};
+
+const weeklySalesData = {
+  data: [4200, 5100, 6300, 5800],
+  labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+  title: 'Weekly Sales',
+};
+
+const dailySalesData = {
+  data: [950, 1120, 980, 1340, 1200, 890, 760],
+  labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  title: 'Daily Sales',
+};
 
 export default function DashboardPage() {
+  const [timeRange, setTimeRange] = useState('monthly');
+  
+  // Select the appropriate data based on the selected time range
+  const chartData = timeRange === 'monthly' 
+    ? monthlySalesData 
+    : timeRange === 'weekly' 
+      ? weeklySalesData 
+      : dailySalesData;
+  
+  // Format data for recharts
+  const formattedData = chartData.labels.map((label, index) => ({
+    name: label,
+    value: chartData.data[index]
+  }));
+
   return (
     <div className="flex flex-col gap-6 p-6">
       <h1 className="text-3xl font-bold">Dashboard</h1>
@@ -62,9 +106,58 @@ export default function DashboardPage() {
       </div>
       
       {/* Sales Overview Chart */}
-      <div className="grid grid-cols-1 gap-6">
-        <SalesOverviewChart />
-      </div>
+      <Card className="w-full">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle>Sales Overview</CardTitle>
+          <div className="flex space-x-2">
+            <Button 
+              variant={timeRange === 'daily' ? 'default' : 'outline'} 
+              size="sm"
+              onClick={() => setTimeRange('daily')}
+            >
+              Daily
+            </Button>
+            <Button 
+              variant={timeRange === 'weekly' ? 'default' : 'outline'} 
+              size="sm"
+              onClick={() => setTimeRange('weekly')}
+            >
+              Weekly
+            </Button>
+            <Button 
+              variant={timeRange === 'monthly' ? 'default' : 'outline'} 
+              size="sm"
+              onClick={() => setTimeRange('monthly')}
+            >
+              Monthly
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={formattedData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  name={chartData.title}
+                  stroke="rgb(59, 130, 246)"
+                  activeDot={{ r: 8 }}
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
       
       {/* Additional Charts and Tables */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

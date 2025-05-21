@@ -1,6 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer 
+} from 'recharts';
+import { 
+  dailyVisitorData, 
+  weeklyVisitorData, 
+  monthlyVisitorData 
+} from '@/lib/mock/visitor-data';
 
 export function AnalyticsContent() {
   // Sample data for analytics
@@ -12,6 +27,21 @@ export function AnalyticsContent() {
     avgSessionDuration: '3m 42s',
     conversionRate: 4.8
   });
+
+  // Visitor chart state
+  const [visitorTimeRange, setVisitorTimeRange] = useState('daily');
+  const [visitorChartData, setVisitorChartData] = useState(dailyVisitorData);
+
+  // Update chart data when time range changes
+  useEffect(() => {
+    if (visitorTimeRange === 'daily') {
+      setVisitorChartData(dailyVisitorData);
+    } else if (visitorTimeRange === 'weekly') {
+      setVisitorChartData(weeklyVisitorData);
+    } else {
+      setVisitorChartData(monthlyVisitorData);
+    }
+  }, [visitorTimeRange]);
 
   const [trafficSources] = useState([
     { source: 'Direct', visitors: 8642, percentage: 35 },
@@ -83,14 +113,68 @@ export function AnalyticsContent() {
         </div>
       </div>
 
-      {/* Visitors Chart Placeholder */}
+      {/* Visitors Chart */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-        <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Visitor Trends</h2>
-        <div className="h-64 bg-gray-50 dark:bg-gray-700 rounded-md flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-gray-400 dark:text-gray-500 mb-2">Visitors Chart</div>
-            <div className="text-sm text-gray-500 dark:text-gray-400">This is where a visitor trend chart would be displayed</div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Visitor Trends</h2>
+          <div className="flex space-x-2">
+            <button 
+              className={`px-3 py-1 text-xs rounded-md ${visitorTimeRange === 'daily' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+              onClick={() => setVisitorTimeRange('daily')}
+            >
+              Daily
+            </button>
+            <button 
+              className={`px-3 py-1 text-xs rounded-md ${visitorTimeRange === 'weekly' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+              onClick={() => setVisitorTimeRange('weekly')}
+            >
+              Weekly
+            </button>
+            <button 
+              className={`px-3 py-1 text-xs rounded-md ${visitorTimeRange === 'monthly' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+              onClick={() => setVisitorTimeRange('monthly')}
+            >
+              Monthly
+            </button>
           </div>
+        </div>
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart
+              data={visitorChartData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey={visitorTimeRange === 'daily' ? 'date' : visitorTimeRange === 'weekly' ? 'week' : 'month'} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Area 
+                type="monotone" 
+                dataKey="visitors" 
+                name="Total Visitors" 
+                stroke="#3b82f6" 
+                fill="#3b82f6" 
+                fillOpacity={0.2} 
+              />
+              <Area 
+                type="monotone" 
+                dataKey="newUsers" 
+                name="New Users" 
+                stroke="#10b981" 
+                fill="#10b981" 
+                fillOpacity={0.2} 
+              />
+              <Area 
+                type="monotone" 
+                dataKey="returningUsers" 
+                name="Returning Users" 
+                stroke="#f59e0b" 
+                fill="#f59e0b" 
+                fillOpacity={0.2} 
+              />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
