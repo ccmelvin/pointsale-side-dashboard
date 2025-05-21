@@ -1,195 +1,143 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { LineChart } from '@/components/charts/line-chart';
+import { SalesOverviewChart } from '@/components/sales-overview-chart';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { salesSummary, topSellingProducts, recentOrders } from '@/lib/mock-data';
 import { BarChart } from '@/components/charts/bar-chart';
-import { DataTable } from '@/components/tables/data-table';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { formatCurrency } from '@/lib/utils';
-
-interface SalesSummary {
-  totalRevenue: number;
-  totalSales: number;
-  averageOrderValue: number;
-  conversionRate: number;
-}
-
-interface MonthlySales {
-  month: string;
-  amount: number;
-}
-
-interface Transaction {
-  id: string;
-  customer: string;
-  date: string;
-  amount: number;
-  status: 'completed' | 'pending' | 'failed';
-}
 
 export default function DashboardPage() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [summary, setSummary] = useState<SalesSummary | null>(null);
-  const [monthlySales, setMonthlySales] = useState<MonthlySales[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-  useEffect(() => {
-    // Simulate API calls to fetch dashboard data
-    const fetchDashboardData = async () => {
-      setIsLoading(true);
-      try {
-        // In a real app, these would be actual API calls
-        // For now, we'll use mock data
-        
-        // Fetch summary data
-        const summaryData = {
-          totalRevenue: 253000,
-          totalSales: 4520,
-          averageOrderValue: 55.97,
-          conversionRate: 3.2,
-        };
-        
-        // Fetch monthly sales data
-        const salesData = [
-          { month: 'Jan', amount: 12500 },
-          { month: 'Feb', amount: 15000 },
-          { month: 'Mar', amount: 18000 },
-          { month: 'Apr', amount: 16500 },
-          { month: 'May', amount: 21000 },
-          { month: 'Jun', amount: 19500 },
-          { month: 'Jul', amount: 22500 },
-          { month: 'Aug', amount: 24000 },
-          { month: 'Sep', amount: 21500 },
-          { month: 'Oct', amount: 25000 },
-          { month: 'Nov', amount: 27500 },
-          { month: 'Dec', amount: 30000 },
-        ];
-        
-        // Fetch recent transactions
-        const transactionsData = [
-          { id: 'T-1001', customer: 'John Doe', date: '2023-05-10', amount: 125.99, status: 'completed' as const },
-          { id: 'T-1002', customer: 'Jane Smith', date: '2023-05-09', amount: 89.95, status: 'completed' as const },
-          { id: 'T-1003', customer: 'Robert Johnson', date: '2023-05-09', amount: 254.50, status: 'pending' as const },
-          { id: 'T-1004', customer: 'Emily Davis', date: '2023-05-08', amount: 345.00, status: 'completed' as const },
-          { id: 'T-1005', customer: 'Michael Brown', date: '2023-05-08', amount: 175.25, status: 'failed' as const },
-        ];
-        
-        setSummary(summaryData);
-        setMonthlySales(salesData);
-        setTransactions(transactionsData);
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, []);
-
-  const transactionColumns = [
-    { key: 'id', title: 'ID' },
-    { key: 'customer', title: 'Customer' },
-    { key: 'date', title: 'Date' },
-    { 
-      key: 'amount', 
-      title: 'Amount',
-      render: (value: number) => formatCurrency(value)
-    },
-    { 
-      key: 'status', 
-      title: 'Status',
-      render: (value: string) => (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-          value === 'completed' ? 'bg-green-100 text-green-800' :
-          value === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-          'bg-red-100 text-red-800'
-        }`}>
-          {value.charAt(0).toUpperCase() + value.slice(1)}
-        </span>
-      )
-    },
-  ];
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
+    <div className="flex flex-col gap-6 p-6">
+      <h1 className="text-3xl font-bold">Dashboard</h1>
       
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Total Revenue</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Sales</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(summary?.totalRevenue || 0)}</div>
+            <div className="text-2xl font-bold">{salesSummary.totalSales}</div>
+            <p className="text-xs text-muted-foreground">
+              <span className="text-green-500">↑ {salesSummary.salesGrowth}</span> from last month
+            </p>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Total Sales</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Average Order</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{summary?.totalSales.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{salesSummary.averageOrderValue}</div>
+            <p className="text-xs text-muted-foreground">
+              <span className="text-green-500">↑ 2.1%</span> from last month
+            </p>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Avg. Order Value</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Orders</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(summary?.averageOrderValue || 0)}</div>
+            <div className="text-2xl font-bold">{salesSummary.totalOrders}</div>
+            <p className="text-xs text-muted-foreground">
+              <span className="text-green-500">↑ 8.2%</span> from last month
+            </p>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">Conversion Rate</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Conversion Rate</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{summary?.conversionRate}%</div>
+            <div className="text-2xl font-bold">{salesSummary.conversionRate}</div>
+            <p className="text-xs text-muted-foreground">
+              <span className="text-green-500">↑ 0.5%</span> from last month
+            </p>
           </CardContent>
         </Card>
       </div>
       
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <LineChart
-          title="Monthly Revenue"
-          data={monthlySales.map(item => item.amount)}
-          labels={monthlySales.map(item => item.month)}
-        />
-        
-        <BarChart
-          title="Monthly Sales"
-          data={monthlySales.map(item => item.amount / 50)} // Scaled down for visualization
-          labels={monthlySales.map(item => item.month)}
-        />
+      {/* Sales Overview Chart */}
+      <div className="grid grid-cols-1 gap-6">
+        <SalesOverviewChart />
       </div>
       
-      {/* Recent Transactions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Transactions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <DataTable
-            data={transactions}
-            columns={transactionColumns}
-            emptyMessage="No recent transactions"
-          />
-        </CardContent>
-      </Card>
+      {/* Additional Charts and Tables */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Top Selling Products */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Selling Products</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b text-left text-sm">
+                    <th className="pb-2 font-medium">Product</th>
+                    <th className="pb-2 font-medium">Category</th>
+                    <th className="pb-2 font-medium text-right">Sales</th>
+                    <th className="pb-2 font-medium text-right">Revenue</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {topSellingProducts.map((product) => (
+                    <tr key={product.id} className="border-b last:border-0">
+                      <td className="py-2">{product.name}</td>
+                      <td className="py-2">{product.category}</td>
+                      <td className="py-2 text-right">{product.sales}</td>
+                      <td className="py-2 text-right">{product.revenue}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Recent Orders */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Orders</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b text-left text-sm">
+                    <th className="pb-2 font-medium">Order ID</th>
+                    <th className="pb-2 font-medium">Customer</th>
+                    <th className="pb-2 font-medium">Status</th>
+                    <th className="pb-2 font-medium text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentOrders.map((order) => (
+                    <tr key={order.id} className="border-b last:border-0">
+                      <td className="py-2">{order.id}</td>
+                      <td className="py-2">{order.customer}</td>
+                      <td className="py-2">
+                        <span className={`inline-block rounded-full px-2 py-0.5 text-xs ${
+                          order.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                          order.status === 'Processing' ? 'bg-blue-100 text-blue-800' :
+                          'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="py-2 text-right">{order.amount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
